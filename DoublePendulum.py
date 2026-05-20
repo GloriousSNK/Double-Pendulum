@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import matplotlib.widgets as widgets
 from matplotlib.animation import FuncAnimation
 
-# ===== SYMPY DERIVATION =====
 print("Deriving equations of motion...")
 t_sym = sm.symbols('t')
 m_1, m_2, g_sym, L_1, L_2 = sm.symbols('m_1 m_2 g L_1 L_2', positive=True)
@@ -42,7 +41,6 @@ LEF2 = sm.lambdify((the1_fn, the2_fn, the1_d, the2_d, t_sym, m_1, m_2, g_sym, L_
 print("Ready.")
 
 
-# ===== ODE =====
 def system_of_odes(t, y, m1, m2, g, l1, l2, b):
     a1, a1d, a2, a2d = y
     a1dd = LEF1(a1, a2, a1d, a2d, t, m1, m2, g, l1, l2) - b * a1d
@@ -50,14 +48,12 @@ def system_of_odes(t, y, m1, m2, g, l1, l2, b):
     return [a1d, a1dd, a2d, a2dd]
 
 
-# ===== CONSTANTS =====
 COLORS = ['#3a7bd5', '#e05a5a', '#50c878', '#f5a623', '#b44fff', '#00e5cc', '#ff69b4', '#ffd700']
 SLIDER_DEFAULTS = {'m1': 2.0, 'm2': 2.0, 'L1': 1.0, 'L2': 1.0, 'g': 9.81, 'b': 0.0}
 INTERVAL = 16
 MAX_N = 8
 
 
-# ===================== SETUP SCREEN =====================
 def run_setup():
     result = {}
     fig = plt.figure(figsize=(8, 9.5), facecolor='#0d0d0d')
@@ -131,7 +127,6 @@ def run_setup():
     return result
 
 
-# ===================== SIMULATION SCREEN =====================
 def run_simulation(n_pends, ic_list, duration, slider_vals=None):
     if slider_vals is None:
         slider_vals = dict(SLIDER_DEFAULTS)
@@ -140,7 +135,7 @@ def run_simulation(n_pends, ic_list, duration, slider_vals=None):
     paused = [False]
 
     fig = plt.figure(figsize=(16, 8.8), facecolor='#0d0d0d')
-    ax_anim = fig.add_axes([0.04, 0.18, 0.58, 0.77])  # Bigger animation area
+    ax_anim = fig.add_axes([0.04, 0.18, 0.58, 0.77])  
     ax_phase = fig.add_axes([0.65, 0.38, 0.32, 0.57])
 
     for ax in (ax_anim, ax_phase):
@@ -164,7 +159,6 @@ def run_simulation(n_pends, ic_list, duration, slider_vals=None):
     timer_txt = ax_anim.text(0.02, 0.97, 'T = 0.00 s', transform=ax_anim.transAxes,
                              color='#aaa', fontsize=11, va='top', weight='bold')
 
-    # ==================== SLIDERS + TEXTBOXES (more compact) ====================
     slider_defs = [
         ('m1', 'Mass 1 (kg)', 0.03, 0.13, 0.1, 10.0),
         ('m2', 'Mass 2 (kg)', 0.03, 0.09, 0.1, 10.0),
@@ -209,7 +203,6 @@ def run_simulation(n_pends, ic_list, duration, slider_vals=None):
         tb.on_submit(make_slider_updater(key))
         s.on_changed(make_text_updater(key))
 
-    # ==================== BUTTONS (clean layout) ====================
     btn_y = 0.06
     btn_h = 0.055
 
@@ -237,7 +230,6 @@ def run_simulation(n_pends, ic_list, duration, slider_vals=None):
     btn_clear.on_clicked(lambda _: clear_trails())
     btn_new.on_clicked(lambda _: new_session())
 
-    # ==================== ARTISTS & STATE ====================
     pivot_dot, = ax_anim.plot([0], [0], 'o', color='white', markersize=6.5, zorder=10)
 
     pend_artists = []
@@ -349,7 +341,6 @@ def run_simulation(n_pends, ic_list, duration, slider_vals=None):
     return action_result
 
 
-# ===================== MAIN LOOP =====================
 slider_vals = None
 while True:
     setup = run_setup()
